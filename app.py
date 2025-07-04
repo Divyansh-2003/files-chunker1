@@ -311,31 +311,63 @@ uploaded_files = st.file_uploader(
 )
 
 # --- Chunk Size Settings ---
+if 'selected_chunk_size' not in st.session_state:
+    st.session_state.selected_chunk_size = "2MB"
+
 st.markdown("""
     <div class="chunk-size-container">
         <div class="chunk-size-title">⚙️ CHUNK SIZE SETTINGS</div>
-        <input type="text" placeholder="e.g., 2MB, 5MB, 10MB" style="border: 2px solid #000000; border-radius: 8px; font-weight: bold; color: #000000; background-color: #ffffff;">
+        <input type="text" id="custom-size" placeholder="e.g., 2MB, 5MB, 10MB" 
+               onchange="updateChunkSize(this.value)"
+               style="border: 2px solid #000000; border-radius: 8px; font-weight: bold; color: #000000; background-color: #ffffff;">
         <div class="size-buttons">
-            <button class="size-btn">2MB</button>
-            <button class="size-btn">5MB</button>
-            <button class="size-btn">7MB</button>
-            <button class="size-btn">10MB</button>
+            <button class="size-btn" onclick="selectSize('2MB')">2MB</button>
+            <button class="size-btn" onclick="selectSize('5MB')">5MB</button>
+            <button class="size-btn" onclick="selectSize('7MB')">7MB</button>
+            <button class="size-btn" onclick="selectSize('10MB')">10MB</button>
         </div>
     </div>
 """, unsafe_allow_html=True)
 
-# Parse chunk size
-try:
-    max_chunk_size = humanfriendly.parse_size("2MB")
-    st.success(f"✅ Chunk size set to: **{humanfriendly.format_size(max_chunk_size)}**")
-except:
-    st.error("❌ Invalid size format. Use: 2MB, 5MB, etc.")
-    max_chunk_size = 2 * 1024 * 1024
+st.markdown("""
+    <script>
+    function selectSize(size) {
+        const buttons = document.querySelectorAll('.size-btn');
+        buttons.forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        document.getElementById('custom-size').value = size;
+        updateChunkSize(size);
+    }
+
+    function updateChunkSize(size) {
+        const args = {size: size};
+        window.parent.postMessage({
+            type: 'streamlit:setComponentValue',
+            value: size
+        }, '*');
+    }
+    </script>
+""", unsafe_allow_html=True)
+
+if st.session_state.get('chunk_size_changed'):
+    try:
+        new_size = st.session_state.get('chunk_size_changed')
+        max_chunk_size = humanfriendly.parse_size(new_size)
+        st.session_state.selected_chunk_size = new_size
+        st.success(f"✅ Chunk size set to: **{humanfriendly.format_size(max_chunk_size)}**")
+    except:
+        st.error("❌ Invalid size format. Use: 2MB, 5MB, etc.")
+        max_chunk_size = 2 * 1024 * 1024
 
 # --- Process Button ---
 if uploaded_files:
     if st.button("🚀 PROCESS FILES", key="process_btn", type="primary"):
         with st.spinner("Processing files..."):
+            try:
+                max_chunk_size = humanfriendly.parse_size(st.session_state.selected_chunk_size)
+            except:
+                max_chunk_size = 2 * 1024 * 1024  # Default to 2MB if parsing fails
+                
             if os.path.exists(BASE_TEMP_DIR):
                 shutil.rmtree(BASE_TEMP_DIR)
             os.makedirs(INPUT_DIR, exist_ok=True)
