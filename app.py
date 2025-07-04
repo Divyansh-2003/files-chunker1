@@ -115,7 +115,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 st.set_page_config(page_title="Smart Folder Chunker", layout="wide")
-st.title("🗂️ Smart Folder Chunker")
+st.title("🗂️ SMART FOLDER CHUNKER")
 st.write("Upload folders or ZIPs. Files will be chunked and zipped intelligently while preserving folder structure.")
 
 # Reset button
@@ -134,7 +134,7 @@ st.sidebar.header("Settings")
 
 # Initialize session state for chunk size
 if "chunk_size" not in st.session_state:
-    st.session_state.chunk_size = "2MB"  # Default value
+    st.session_state.chunk_size = "5MB"  # Default value
 
 # Function to update chunk size
 def update_chunk_size(size):
