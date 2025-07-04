@@ -86,7 +86,7 @@ def split_folder_intelligently(input_folder, max_chunk_size, output_dir):
 st.markdown("""
     <style>
     .stApp {
-        background-color: #e7e6e8; /* Set background color to #e7e6e8 */
+        background-color: #818083; /* Set background color to #818083 */
     }
     </style>
 """, unsafe_allow_html=True)
