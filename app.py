@@ -119,7 +119,7 @@ st.title("🗂️ SMART FOLDER CHUNKER")
 st.write("Upload folders or ZIPs. Files will be chunked and zipped intelligently while preserving folder structure.")
 
 # Reset button
-if st.button("🔄 Reset Session"):
+if st.button("🔄 RESET SESSION"):
     if "zip_results" in st.session_state:
         del st.session_state["zip_results"]
     if "session_id" in st.session_state:
