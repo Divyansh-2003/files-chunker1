@@ -90,10 +90,17 @@ st.markdown("""
     }
 
     /* Sidebar styling */
-    .hidescrollbar {
-        background-color: #818083; /* Set sidebar background color to #818083 */
-        padding: 10px;
-        border-radius: 8px;
+    .css-1d391kg {
+        width: 400px; /* Increase sidebar width */
+        padding: 20px;
+    }
+
+    /* Center buttons inside the sidebar */
+    .sidebar-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
     }
 
     /* Reset button styling */
