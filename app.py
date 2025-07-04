@@ -98,7 +98,7 @@ st.markdown("""
 
     /* Reset button styling */
     .stButton > button {
-        background-color: #818083; /* Set reset button background color */
+        background-color: #1f1f23; /* Set reset button background color */
         color: white;
         border: none;
         border-radius: 8px;
