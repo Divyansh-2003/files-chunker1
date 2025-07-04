@@ -91,14 +91,14 @@ st.markdown("""
 
     /* Sidebar styling */
     .hidescrollbar {
-        background-color: #746e69; /* Set sidebar background color to #746e69 */
+        background-color: #818083; /* Set sidebar background color to #818083 */
         padding: 10px;
         border-radius: 8px;
     }
 
     /* Reset button styling */
     .stButton > button {
-        background-color: #747375; /* Set reset button background color */
+        background-color: #818083; /* Set reset button background color */
         color: white;
         border: none;
         border-radius: 8px;
