@@ -315,11 +315,11 @@ uploaded_files = st.file_uploader(
 if 'selected_chunk_size' not in st.session_state:
     st.session_state.selected_chunk_size = "2MB"
 
+# Update the chunk size container HTML
 st.markdown("""
     <div class="chunk-size-container">
         <div class="chunk-size-title">⚙️ CHUNK SIZE SETTINGS</div>
         <input type="text" id="custom-size" placeholder="e.g., 2MB, 5MB, 10MB" 
-               onchange="updateChunkSize(this.value)"
                style="border: 2px solid #000000; border-radius: 8px; font-weight: bold; color: #000000; background-color: #ffffff;">
         <div class="size-buttons">
             <button class="size-btn" onclick="selectSize('2MB')">2MB</button>
@@ -330,6 +330,7 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
+# Add JavaScript for handling chunk size selection
 st.markdown("""
     <script>
     function selectSize(size) {
@@ -350,20 +351,21 @@ st.markdown("""
     </script>
 """, unsafe_allow_html=True)
 
-if st.session_state.get('chunk_size_changed'):
+# Handle chunk size changes
+custom_size = st.text_input("Enter custom chunk size (e.g., 2MB, 5MB, 10MB):", value=st.session_state.selected_chunk_size)
+if custom_size:
     try:
-        new_size = st.session_state.get('chunk_size_changed')
-        max_chunk_size = humanfriendly.parse_size(new_size)
-        st.session_state.selected_chunk_size = new_size
+        max_chunk_size = humanfriendly.parse_size(custom_size)
+        st.session_state.selected_chunk_size = custom_size
         st.success(f"✅ Chunk size set to: **{humanfriendly.format_size(max_chunk_size)}**")
     except:
         st.error("❌ Invalid size format. Use: 2MB, 5MB, etc.")
-        max_chunk_size = 2 * 1024 * 1024
 
 # --- Process Button ---
 if uploaded_files:
     if st.button("🚀 PROCESS FILES", key="process_btn", type="primary"):
         with st.spinner("Processing files..."):
+            # Get the current selected chunk size
             try:
                 max_chunk_size = humanfriendly.parse_size(st.session_state.selected_chunk_size)
             except:
