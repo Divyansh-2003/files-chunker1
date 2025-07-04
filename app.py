@@ -23,12 +23,12 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# --- Custom CSS for Light Theme ---
+# --- Custom CSS for Updated Theme ---
 st.markdown("""
     <style>
     /* Main background */
     .stApp {
-        background-color: #ffffff; /* Change background to white */
+        background-color: #b9b6c1; /* Change background to #b9b6c1 */
     }
     
     /* Header container */
@@ -54,7 +54,6 @@ st.markdown("""
         background-color: #ffffff;
         border: 2px solid #000000;
         border-radius: 8px;
-        padding: 8px 16px; /* Adjust padding for smaller button */
         font-size: 14px; /* Smaller font size */
         font-weight: bold;
         color: #000000;
@@ -73,7 +72,7 @@ st.markdown("""
     /* Upload area styling */
     .upload-container {
         background-color: #ffffff;
-        padding: 0.5rem; /* Reduce padding by 50% */
+        padding: 0.5rem; /* Reduce padding */
         border-radius: 12px;
         border: 2px dashed #000000;
         margin: 1rem 0;
@@ -103,14 +102,13 @@ st.markdown("""
         display: flex;
         gap: 10px;
         justify-content: center;
-        flex-wrap: wrap;
+        flex-wrap: nowrap; /* Keep buttons in the same row */
     }
     
     .size-btn {
         background-color: #ffffff;
         border: 2px solid #000000;
         border-radius: 8px;
-        padding: 8px 16px;
         font-size: 14px;
         font-weight: bold;
         color: #000000;
@@ -135,7 +133,6 @@ st.markdown("""
         color: #ffffff;
         border: none;
         border-radius: 8px;
-        padding: 6px 15px; /* Reduce size by 50% */
         font-size: 14px; /* Smaller font size */
         font-weight: bold;
         cursor: pointer;
@@ -152,7 +149,7 @@ st.markdown("""
     /* Results container */
     .results-container {
         background-color: #ffffff;
-        padding: 0.75rem; /* Reduce padding by 50% */
+        padding: 0.75rem; /* Reduce padding */
         border-radius: 12px;
         border: 2px solid #000000;
         margin: 1rem 0;
@@ -242,8 +239,7 @@ st.markdown("""
 # --- File Upload Section ---
 st.markdown("""
     <div class="upload-container">
-        <h3 style="color: #000000; margin-bottom: 1rem;">📁 UPLOAD YOUR FILES</h3>
-        <p style="color: #666666;">Drag and drop files or folders (ZIPs will be auto-extracted)</p>
+        <h3 style="color: #000000; margin-bottom: 0;">📁 UPLOAD YOUR FILES Drag and drop files or folders (ZIPs will be auto-extracted)</h3>
     </div>
 """, unsafe_allow_html=True)
 
@@ -257,17 +253,12 @@ uploaded_files = st.file_uploader(
 st.markdown("""
     <div class="chunk-size-container">
         <div class="chunk-size-title">⚙️ CHUNK SIZE SETTINGS</div>
-        <input type="text" placeholder="e.g., 2MB, 5MB, 10MB" style="border: 2px solid #000000; border-radius: 8px; padding: 8px 12px; font-weight: bold; color: #000000; background-color: #ffffff;">
+        <input type="text" placeholder="e.g., 2MB, 5MB, 10MB" style="border: 2px solid #000000; border-radius: 8px; font-weight: bold; color: #000000; background-color: #ffffff;">
         <div class="size-buttons">
-""", unsafe_allow_html=True)
-
-size_options = ["2MB", "5MB", "7MB", "10MB", "15MB", "20MB"]
-for size in size_options:
-    st.markdown(f"""
-        <button class="size-btn">{size}</button>
-    """, unsafe_allow_html=True)
-
-st.markdown("""
+            <button class="size-btn">2MB</button>
+            <button class="size-btn">5MB</button>
+            <button class="size-btn">7MB</button>
+            <button class="size-btn">10MB</button>
         </div>
     </div>
 """, unsafe_allow_html=True)
