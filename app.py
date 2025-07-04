@@ -261,7 +261,6 @@ def split_folder_intelligently(input_folder, max_chunk_size, output_dir):
 st.markdown("""
     <div class="header-container">
         <div class="logo">🗂️ SMART FOLDER CHUNKER</div>
-        <button class="reset-button" onclick="resetApp()">🔄 RESET</button>
     </div>
 """, unsafe_allow_html=True)
 
@@ -276,26 +275,28 @@ st.markdown("""
     </script>
 """, unsafe_allow_html=True)
 
-# Add this after the reset button
-if st.button("Reset", key="reset_btn", type="secondary"):
-    # Clear session state
-    for key in list(st.session_state.keys()):
-        del st.session_state[key]
-    
-    # Clear temp directories
-    if os.path.exists(BASE_TEMP_DIR):
-        shutil.rmtree(BASE_TEMP_DIR)
-    
-    # Recreate directories
-    os.makedirs(INPUT_DIR, exist_ok=True)
-    os.makedirs(OUTPUT_DIR, exist_ok=True)
-    
-    # Reset uploaded files
-    st.session_state["uploaded_files"] = None
-    st.session_state["zip_results"] = None
-    
-    # Force page refresh
-    st.rerun()
+# --- Center Reset Button ---
+col1, col2, col3 = st.columns([1, 2, 1])
+with col2:
+    if st.button("🔄 Reset Session", key="reset_btn", type="secondary"):
+        # Clear session state
+        for key in list(st.session_state.keys()):
+            del st.session_state[key]
+        
+        # Clear temp directories
+        if os.path.exists(BASE_TEMP_DIR):
+            shutil.rmtree(BASE_TEMP_DIR)
+        
+        # Recreate directories
+        os.makedirs(INPUT_DIR, exist_ok=True)
+        os.makedirs(OUTPUT_DIR, exist_ok=True)
+        
+        # Reset uploaded files
+        st.session_state["uploaded_files"] = None
+        st.session_state["zip_results"] = None
+        
+        # Force page refresh
+        st.rerun()
 
 # --- File Upload Section ---
 st.markdown("""
