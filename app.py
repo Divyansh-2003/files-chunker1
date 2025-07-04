@@ -82,11 +82,34 @@ def split_folder_intelligently(input_folder, max_chunk_size, output_dir):
     return results
 
 # --- Streamlit UI ---
-# Set background color
+# Set background color and sidebar styling
 st.markdown("""
     <style>
     .stApp {
         background-color: #818083; /* Set background color to #818083 */
+    }
+
+    /* Sidebar styling */
+    .hidescrollbar {
+        background-color: #746e69; /* Set sidebar background color to #746e69 */
+        padding: 10px;
+        border-radius: 8px;
+    }
+
+    /* Reset button styling */
+    .stButton > button {
+        background-color: #747375; /* Set reset button background color */
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 8px 16px;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .stButton > button:hover {
+        background-color: #5f5f5f; /* Slightly darker shade for hover */
     }
     </style>
 """, unsafe_allow_html=True)
