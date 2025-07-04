@@ -86,14 +86,14 @@ def split_folder_intelligently(input_folder, max_chunk_size, output_dir):
 st.markdown("""
     <style>
     .stApp {
-        background-color: #e7e6e8; /* Set background color to #e7e6e8 */
+        background-color: #a2a1a2; /* Set background color to #a2a1a2 */
     }
 
     /* Sidebar styling */
     .css-1d391kg {
-        border: 4px solid #000000; /* Double the border thickness */
+        border: 3px solid #000000; /* Double the border thickness */
         padding: 20px;
-        border-radius: 8px;
+        border-radius: 6px;
     }
 
     /* Reset button styling */
@@ -103,7 +103,7 @@ st.markdown("""
         border: none;
         border-radius: 8px;
         padding: 8px 16px;
-        font-size: 14px;
+        font-size: 16px;
         font-weight: bold;
         cursor: pointer;
     }
