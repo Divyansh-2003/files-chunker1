@@ -28,13 +28,13 @@ st.markdown("""
     <style>
     /* Main background */
     .stApp {
-        background-color: #dad0f7;
+        background-color: #ffffff; /* Change background to white */
     }
     
     /* Header container */
     .header-container {
         display: flex;
-        justify-content: space-between;
+        justify-content: space-between; /* Align logo and reset button */
         align-items: center;
         padding: 1rem 0;
         margin-bottom: 2rem;
@@ -42,7 +42,7 @@ st.markdown("""
     
     /* Logo styling */
     .logo {
-        font-size: 2.5rem;
+        font-size: 2rem; /* Slightly smaller font size */
         font-weight: bold;
         color: #000000;
         text-transform: uppercase;
@@ -54,8 +54,8 @@ st.markdown("""
         background-color: #ffffff;
         border: 2px solid #000000;
         border-radius: 8px;
-        padding: 12px 24px;
-        font-size: 18px;
+        padding: 8px 16px; /* Adjust padding for smaller button */
+        font-size: 14px; /* Smaller font size */
         font-weight: bold;
         color: #000000;
         cursor: pointer;
@@ -70,22 +70,31 @@ st.markdown("""
         box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
     
-    /* Chunk size container */
-    .chunk-size-container {
+    /* Upload area styling */
+    .upload-container {
         background-color: #ffffff;
-        padding: 1.5rem;
+        padding: 1rem; /* Reduce padding */
         border-radius: 12px;
-        border: 2px solid #000000;
+        border: 2px dashed #000000;
         margin: 1rem 0;
+        text-align: center;
         box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
     
+    /* Chunk size container */
+    .chunk-size-container {
+        display: flex; /* Align chunk size settings in one line */
+        gap: 10px;
+        justify-content: center;
+        align-items: center;
+        margin: 1rem 0;
+    }
+    
     .chunk-size-title {
-        font-size: 1.2rem;
+        font-size: 1rem; /* Adjust font size */
         font-weight: bold;
         color: #000000;
-        margin-bottom: 1rem;
-        text-align: center;
+        margin-right: 1rem;
     }
     
     /* Predefined buttons */
@@ -94,7 +103,6 @@ st.markdown("""
         gap: 10px;
         justify-content: center;
         flex-wrap: wrap;
-        margin-top: 1rem;
     }
     
     .size-btn {
@@ -118,17 +126,6 @@ st.markdown("""
     .size-btn.active {
         background-color: #000000;
         color: #ffffff;
-    }
-    
-    /* Upload area styling */
-    .upload-container {
-        background-color: #ffffff;
-        padding: 2rem;
-        border-radius: 12px;
-        border: 3px dashed #000000;
-        margin: 1rem 0;
-        text-align: center;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
     
     /* Process button */
@@ -161,44 +158,10 @@ st.markdown("""
         box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
     
-    /* Download buttons */
-    .download-btn {
-        background-color: #ffffff;
-        border: 2px solid #000000;
-        border-radius: 8px;
-        padding: 8px 16px;
-        font-size: 14px;
-        font-weight: bold;
-        color: #000000;
-        margin: 4px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-    
-    .download-btn:hover {
-        background-color: #f0f0f0;
-        transform: translateY(-1px);
-    }
-    
     /* Hide Streamlit elements */
     .stDeployButton {display:none;}
     footer {visibility: hidden;}
     .stApp > header {visibility: hidden;}
-    
-    /* Custom input styling */
-    .stTextInput > div > div > input {
-        border: 2px solid #000000;
-        border-radius: 8px;
-        padding: 8px 12px;
-        font-weight: bold;
-        color: #000000;
-        background-color: #ffffff;
-    }
-    
-    .stTextInput > div > div > input:focus {
-        border-color: #666666;
-        box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
-    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -271,22 +234,9 @@ def split_folder_intelligently(input_folder, max_chunk_size, output_dir):
 st.markdown("""
     <div class="header-container">
         <div class="logo">🗂️ SMART FOLDER CHUNKER</div>
-        <div></div>
+        <button class="reset-button" onclick="location.reload()">🔄 RESET</button>
     </div>
 """, unsafe_allow_html=True)
-
-# Reset button in top right
-col1, col2, col3 = st.columns([6, 1, 1])
-with col3:
-    if st.button("🔄 RESET", key="reset_btn", help="Reset current session"):
-        if "zip_results" in st.session_state:
-            del st.session_state["zip_results"]
-        if "session_id" in st.session_state:
-            folder = f"temp_storage_{st.session_state['session_id']}"
-            if os.path.exists(folder):
-                shutil.rmtree(folder)
-            del st.session_state["session_id"]
-        st.rerun()
 
 # --- File Upload Section ---
 st.markdown("""
@@ -306,36 +256,24 @@ uploaded_files = st.file_uploader(
 st.markdown("""
     <div class="chunk-size-container">
         <div class="chunk-size-title">⚙️ CHUNK SIZE SETTINGS</div>
+        <input type="text" placeholder="e.g., 2MB, 5MB, 10MB" style="border: 2px solid #000000; border-radius: 8px; padding: 8px 12px; font-weight: bold; color: #000000; background-color: #ffffff;">
+        <div class="size-buttons">
+""", unsafe_allow_html=True)
+
+size_options = ["2MB", "5MB", "7MB", "10MB", "15MB", "20MB"]
+for size in size_options:
+    st.markdown(f"""
+        <button class="size-btn">{size}</button>
+    """, unsafe_allow_html=True)
+
+st.markdown("""
+        </div>
     </div>
 """, unsafe_allow_html=True)
 
-# Custom size input
-col1, col2 = st.columns([1, 1])
-with col1:
-    custom_size = st.text_input(
-        "Custom Size", 
-        value="2MB", 
-        placeholder="e.g., 2MB, 5MB, 10MB",
-        help="Enter custom chunk size (e.g., 2MB, 5MB, 10MB)"
-    )
-
-# Predefined size buttons
-st.markdown('<div class="size-buttons">', unsafe_allow_html=True)
-size_options = ["2MB", "5MB", "7MB", "10MB", "15MB", "20MB"]
-selected_size = st.session_state.get("selected_size", "2MB")
-
-cols = st.columns(len(size_options))
-for i, size in enumerate(size_options):
-    with cols[i]:
-        if st.button(size, key=f"size_{size}"):
-            st.session_state["selected_size"] = size
-            custom_size = size
-
-st.markdown('</div>', unsafe_allow_html=True)
-
 # Parse chunk size
 try:
-    max_chunk_size = humanfriendly.parse_size(custom_size)
+    max_chunk_size = humanfriendly.parse_size("2MB")
     st.success(f"✅ Chunk size set to: **{humanfriendly.format_size(max_chunk_size)}**")
 except:
     st.error("❌ Invalid size format. Use: 2MB, 5MB, etc.")
