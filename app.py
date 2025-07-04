@@ -203,11 +203,29 @@ if results:
     st.success("✅ Processing complete!")
     all_chunks = []
 
+    # Create combined ZIP first
+    all_zip_bytes = BytesIO()
+    with zipfile.ZipFile(all_zip_bytes, 'w', zipfile.ZIP_DEFLATED) as allzip:
+        for result in results:
+            for chunk in result["chunks"]:
+                chunk_path = os.path.join(OUTPUT_DIR, chunk)
+                all_chunks.append(chunk_path)
+                allzip.write(chunk_path, arcname=os.path.basename(chunk_path))
+    all_zip_bytes.seek(0)
+
+    # Display "Download All as ZIP" button
+    st.download_button(
+        label="📦 Download All as ZIP",
+        data=all_zip_bytes,
+        file_name="ALL_CHUNKS.zip",
+        mime="application/zip"
+    )
+
+    # Display individual ZIP downloads
     for result in results:
         st.write(f"**📁 {result['original']}** ({humanfriendly.format_size(result['size'])})")
         for chunk in result["chunks"]:
             chunk_path = os.path.join(OUTPUT_DIR, chunk)
-            all_chunks.append(chunk_path)
             with open(chunk_path, "rb") as f:
                 st.download_button(
                     label=f"📥 Download {chunk}",
@@ -215,17 +233,3 @@ if results:
                     file_name=chunk,
                     mime="application/zip"
                 )
-
-    # Create combined ZIP
-    all_zip_bytes = BytesIO()
-    with zipfile.ZipFile(all_zip_bytes, 'w', zipfile.ZIP_DEFLATED) as allzip:
-        for zip_path in all_chunks:
-            allzip.write(zip_path, arcname=os.path.basename(zip_path))
-    all_zip_bytes.seek(0)
-
-    st.download_button(
-        label="📦 Download All as ZIP",
-        data=all_zip_bytes,
-        file_name="ALL_CHUNKS.zip",
-        mime="application/zip"
-    )
