@@ -54,7 +54,8 @@ st.markdown("""
         background-color: #ffffff;
         border: 2px solid #000000;
         border-radius: 8px;
-        font-size: 14px; /* Smaller font size */
+        padding: 8px 16px;
+        font-size: 14px;
         font-weight: bold;
         color: #000000;
         cursor: pointer;
@@ -78,6 +79,13 @@ st.markdown("""
         margin: 1rem 0;
         text-align: center;
         box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    /* Upload text styling */
+    .upload-text {
+        font-size: 0.9rem; /* Reduce font size */
+        color: #000000;
+        margin-bottom: 0;
     }
     
     /* Chunk size container */
@@ -156,6 +164,27 @@ st.markdown("""
         box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
     
+    /* Processing complete text */
+    .processing-complete {
+        font-size: 1rem; /* Reduce font size */
+        color: #000000;
+        text-align: center;
+        margin-bottom: 0.5rem;
+    }
+    
+    /* Result item styling */
+    .result-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #f8f9fa;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        margin: 0.5rem 0;
+        border: 1px solid #000000;
+        font-size: 0.9rem; /* Smaller font size */
+    }
+    
     /* Hide Streamlit elements */
     .stDeployButton {display:none;}
     footer {visibility: hidden;}
@@ -232,14 +261,46 @@ def split_folder_intelligently(input_folder, max_chunk_size, output_dir):
 st.markdown("""
     <div class="header-container">
         <div class="logo">🗂️ SMART FOLDER CHUNKER</div>
-        <button class="reset-button" onclick="location.reload()">🔄 RESET</button>
+        <button class="reset-button" onclick="resetApp()">🔄 RESET</button>
     </div>
 """, unsafe_allow_html=True)
+
+# Add JavaScript for reset functionality
+st.markdown("""
+    <script>
+    function resetApp() {
+        localStorage.clear();
+        sessionStorage.clear();
+        window.location.reload(true);
+    }
+    </script>
+""", unsafe_allow_html=True)
+
+# Add this after the reset button
+if st.button("Reset", key="reset_btn", type="secondary"):
+    # Clear session state
+    for key in list(st.session_state.keys()):
+        del st.session_state[key]
+    
+    # Clear temp directories
+    if os.path.exists(BASE_TEMP_DIR):
+        shutil.rmtree(BASE_TEMP_DIR)
+    
+    # Recreate directories
+    os.makedirs(INPUT_DIR, exist_ok=True)
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    
+    # Reset uploaded files
+    st.session_state["uploaded_files"] = None
+    st.session_state["zip_results"] = None
+    
+    # Force page refresh
+    st.rerun()
 
 # --- File Upload Section ---
 st.markdown("""
     <div class="upload-container">
-        <h3 style="color: #000000; margin-bottom: 0;">📁 UPLOAD YOUR FILES Drag and drop files or folders (ZIPs will be auto-extracted)</h3>
+        <p class="upload-text">📁 UPLOAD YOUR FILES - Drag and drop files or folders (ZIPs will be auto-extracted)</p>
     </div>
 """, unsafe_allow_html=True)
 
@@ -303,7 +364,7 @@ results = st.session_state.get("zip_results", [])
 if results:
     st.markdown("""
         <div class="results-container">
-            <h3 style="color: #000000; text-align: center; margin-bottom: 1rem;">✅ PROCESSING COMPLETE!</h3>
+            <p class="processing-complete">✅ PROCESSING COMPLETE!</p>
         </div>
     """, unsafe_allow_html=True)
     
@@ -311,9 +372,9 @@ if results:
 
     for result in results:
         st.markdown(f"""
-            <div style="background-color: #f8f9fa; padding: 1rem; border-radius: 8px; margin: 0.5rem 0; border: 1px solid #000000;">
-                <h4 style="color: #000000; margin: 0;">📁 {result['original']}</h4>
-                <p style="color: #666666; margin: 0.5rem 0;">Size: {humanfriendly.format_size(result['size'])}</p>
+            <div class="result-item">
+                <span>📁 {result['original']}</span>
+                <span>Size: {humanfriendly.format_size(result['size'])}</span>
             </div>
         """, unsafe_allow_html=True)
         
