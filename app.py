@@ -73,7 +73,7 @@ st.markdown("""
     /* Upload area styling */
     .upload-container {
         background-color: #ffffff;
-        padding: 1rem; /* Reduce padding */
+        padding: 0.5rem; /* Reduce padding by 50% */
         border-radius: 12px;
         border: 2px dashed #000000;
         margin: 1rem 0;
@@ -88,6 +88,7 @@ st.markdown("""
         justify-content: center;
         align-items: center;
         margin: 1rem 0;
+        flex-wrap: wrap; /* Allow wrapping for smaller screens */
     }
     
     .chunk-size-title {
@@ -134,8 +135,8 @@ st.markdown("""
         color: #ffffff;
         border: none;
         border-radius: 8px;
-        padding: 12px 30px;
-        font-size: 16px;
+        padding: 6px 15px; /* Reduce size by 50% */
+        font-size: 14px; /* Smaller font size */
         font-weight: bold;
         cursor: pointer;
         transition: all 0.3s ease;
@@ -151,7 +152,7 @@ st.markdown("""
     /* Results container */
     .results-container {
         background-color: #ffffff;
-        padding: 1.5rem;
+        padding: 0.75rem; /* Reduce padding by 50% */
         border-radius: 12px;
         border: 2px solid #000000;
         margin: 1rem 0;
