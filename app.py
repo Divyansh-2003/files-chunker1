@@ -130,7 +130,7 @@ st.set_page_config(page_title="Smart File Chunker", layout="wide")
 st.markdown("""
     <style>
     .stApp {
-        background-color: #ffffff; /* Changed to white */
+        background-color: #f0f4ff; /* 
     }
 
     /* Sidebar styling */
