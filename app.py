@@ -34,6 +34,7 @@ def create_zip_from_folder(folder_path, zip_path):
 
 def split_large_file_into_folder(file_path, max_size, output_dir):
     folder_name = file_path.stem
+    extension = file_path.suffix  # keep original file extension
     target_dir = output_dir / folder_name
     target_dir.mkdir(parents=True, exist_ok=True)
     parts = []
@@ -41,11 +42,19 @@ def split_large_file_into_folder(file_path, max_size, output_dir):
 
     with open(file_path, "rb") as f:
         while chunk := f.read(max_size):
-            part_path = target_dir / f"{folder_name}_part{part_num}"
+            part_path = target_dir / f"{folder_name}_part{part_num}{extension}"
             with open(part_path, "wb") as part_file:
                 part_file.write(chunk)
             parts.append(part_path)
             part_num += 1
+
+    # Generate rejoin scripts
+    bat_script = f'copy /b ' + ' + '.join([f'"{p.name}"' for p in parts]) + f' "{folder_name}{extension}"\n'
+    sh_script = f'cat ' + ' '.join([f'"{p.name}"' for p in parts]) + f' > "{folder_name}{extension}"\n'
+    with open(target_dir / f"{folder_name}_rejoin.bat", "w") as f:
+        f.write(bat_script)
+    with open(target_dir / f"{folder_name}_rejoin.sh", "w") as f:
+        f.write(sh_script)
 
     # zip the folder
     zip_path = output_dir / f"{folder_name}_rejoinable.zip"
@@ -75,7 +84,9 @@ def split_folder_intelligently(input_folder, max_chunk_size, output_dir):
         if current_size + f_size > max_chunk_size and current_chunk:
             zip_name = f"independent_part{part_num}.zip"
             zip_path = Path(output_dir) / zip_name
-            create_zip_from_folder(Path(output_dir), zip_path)
+            with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
+                for f in current_chunk:
+                    zipf.write(f, arcname=f.name)
             zip_parts.append(zip_path.name)
             for f in current_chunk:
                 f.unlink()
@@ -87,7 +98,9 @@ def split_folder_intelligently(input_folder, max_chunk_size, output_dir):
     if current_chunk:
         zip_name = f"independent_part{part_num}.zip"
         zip_path = Path(output_dir) / zip_name
-        create_zip_from_folder(Path(output_dir), zip_path)
+        with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
+            for f in current_chunk:
+                zipf.write(f, arcname=f.name)
         zip_parts.append(zip_path.name)
         for f in current_chunk:
             f.unlink()
@@ -112,8 +125,9 @@ README - How to use this ZIP archive
 This archive contains chunked ZIP files divided into two categories:
 
 1. Rejoinable/
-   - Contains parts of large files (e.g., PDFs, videos) that were split due to size.
-   - Use tools like 7-Zip, WinRAR, or `cat` to merge before extracting.
+   - Contains parts of large files (e.g., PDFs, PPTX, videos, etc.) that were split due to size.
+   - Use tools like 7-Zip, WinRAR, or `cat`/`copy /b` to merge before extracting.
+   - Scripts (.bat for Windows, .sh for macOS/Linux) included to help rejoin files.
 
 2. Independent/
    - Contains ZIPs of small files or folders which can be used independently.
@@ -130,7 +144,7 @@ st.set_page_config(page_title="Smart File Chunker", layout="wide")
 st.markdown("""
     <style>
     .stApp {
-        background-color: #a2a1a2; /* 
+        background-color: #a2a1a2; /* KEEP ORIGINAL BACKGROUND */
     }
 
     /* Sidebar styling */
@@ -162,7 +176,7 @@ st.title("🗂️ Smart File Chunker")
 
 st.markdown("""
 > 📁 **To upload folders**, please **ZIP them first** before uploading.
-> Individual files like PDFs or videos can be uploaded directly.
+> Individual files like PDFs, PPTX, MP3, videos etc. can be uploaded directly.
 """)
 
 # Reset button
